@@ -288,6 +288,18 @@ public class Matrix3d {
 		
 	}
 	
+	public double Determinant()
+	{
+		return data[0]*data[4]*data[8]-
+				data[0]*data[5]*data[7]-
+				data[1]*data[3]*data[8]+
+				data[1]*data[4]*data[6]+
+				data[2]*data[3]*data[7]-
+				data[2]*data[4]*data[6];
+		
+	}
+	
+	
 	public static Matrix3d LinearInterpolate(Matrix3d a, Matrix3d b, double prop)
 	{
 		Matrix3d result = new Matrix3d();

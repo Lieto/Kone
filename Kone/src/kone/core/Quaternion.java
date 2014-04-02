@@ -59,7 +59,8 @@ public class Quaternion {
 		
 	}
 	
-	public void Multiply(Quaternion multiplier)
+	
+	public void thisMultiply(Quaternion multiplier)
 	{
 		Quaternion q = this;
 		
@@ -71,6 +72,47 @@ public class Quaternion {
                 q.k*multiplier.i - q.i*multiplier.k;
             k = q.r*multiplier.k + q.k*multiplier.r +
                 q.i*multiplier.j - q.j*multiplier.i;
+	}
+	
+	public Quaternion Multiply(Quaternion multiplier)
+	{
+		Quaternion q = this;
+		
+		return new Quaternion(
+				q.r*multiplier.r - q.i*multiplier.i -
+                q.j*multiplier.j - q.k*multiplier.k,
+                q.r*multiplier.i + q.i*multiplier.r +
+                q.j*multiplier.k - q.k*multiplier.j,
+                q.r*multiplier.j + q.j*multiplier.r +
+                q.k*multiplier.i - q.i*multiplier.k,
+                q.r*multiplier.k + q.k*multiplier.r +
+                q.i*multiplier.j - q.j*multiplier.i
+            );
+	}
+	
+	public Quaternion Scale(double scale)
+	{
+		return new Quaternion(this.r * scale,
+				this.i * scale,
+				this.j * scale,
+				this.k * scale
+				);
+		
+	}
+	public double InnerProduct(Quaternion multiplier)
+	{
+		Quaternion q = this;
+		
+		return q.r*multiplier.r +
+				q.i*multiplier.i +
+				q.j*multiplier.j +
+				q.k*multiplier.k;
+		
+	}
+	
+	public Quaternion Conjugate()
+	{
+		return new Quaternion(this.r, -this.i, -this.j, -this.k);
 	}
 	
 	public void AddScaledVector(Vector3d vector, double scale)
