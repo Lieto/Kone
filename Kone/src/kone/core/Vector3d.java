@@ -126,6 +126,11 @@ public class Vector3d {
 		
 	}
 
+	public void Invert() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 
 }
