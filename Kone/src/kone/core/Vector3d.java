@@ -127,7 +127,9 @@ public class Vector3d {
 	}
 
 	public void Invert() {
-		// TODO Auto-generated method stub
+		x = -x;
+		y = -y;
+		z = -z;
 		
 	}
 

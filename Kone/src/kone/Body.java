@@ -845,6 +845,16 @@ public class Body {
 		
 		rotation.Add(vector3d);
 	}
+
+	public Vector3d GetPointInLocalSpace(Vector3d point) {
+		
+		return transformMatrix.TransformInverse(point);
+	}
+
+	public Vector3d GetDirectionInLocalSpace(Vector3d direction) {
+		
+		return transformMatrix.TransformInverseDirection(direction);
+	}
 	
 	
 	
