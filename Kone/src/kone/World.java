@@ -26,7 +26,7 @@ public class World {
 	{
 		for (int i = 0; i < bodies.size(); i++)
 		{
-			bodies.get(i).Integrate(duration);
+			bodies.get(i).Integrate(duration, IntegrationMethod.EULER);
 		}
 	}
 

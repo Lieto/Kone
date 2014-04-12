@@ -641,31 +641,85 @@ public class Body {
      * linear approximation to the correct integral. For this reason it
      * may be inaccurate in some cases.
      */
-	public void Integrate(double duration)
+	public void Integrate(double duration, IntegrationMethod method)
 	{
 		if (!isAwake) return;
-		
-		
 		
 		lastFrameAcceleration = new Vector3d(acceleration);
 		
 		lastFrameAcceleration.addScaledVector(forceAccum, inverseMass);
 		
-		Vector3d angularAcceleration = new Vector3d(inverseInertiaTensorWorld.Transform(torqueAccum));
+		Vector3d lastFrameVelocity = new Vector3d(getVelocity());
 		
-		velocity.addScaledVector(lastFrameAcceleration, duration);
+		if (method == IntegrationMethod.EULER)
+		{
+			//Newton-Euler numerical integration
+				
+			Vector3d angularAcceleration = new Vector3d(inverseInertiaTensorWorld.Transform(torqueAccum));
 		
-		rotation.addScaledVector(angularAcceleration, duration);
+			velocity.addScaledVector(lastFrameAcceleration, duration);
 		
-		velocity.Multiply(Math.pow(linearDamping, duration));
-		rotation.Multiply(Math.pow(angularDamping, duration));
+			rotation.addScaledVector(angularAcceleration, duration);
 		
-		position.addScaledVector(velocity, duration);
-		orientation.AddScaledVector(rotation, duration);
+			velocity.Multiply(Math.pow(linearDamping, duration));
+			rotation.Multiply(Math.pow(angularDamping, duration));
 		
-		velocity.Multiply(Math.pow(linearDamping, duration));
-		rotation.Multiply(Math.pow(angularDamping, duration));
+			position.addScaledVector(velocity, duration);
+			orientation.AddScaledVector(rotation, duration);
 		
+			velocity.Multiply(Math.pow(linearDamping, duration));
+			rotation.Multiply(Math.pow(angularDamping, duration));
+		}
+		else
+		{
+			Vector3d angularAcceleration = new Vector3d(inverseInertiaTensorWorld.Transform(torqueAccum));
+			//Runge-Kutta numerical integration
+			Vector3d k1, k2, k3, k4;
+			k1 = new Vector3d();
+			k2 = new Vector3d();
+			k3 = new Vector3d();
+			k4 = new Vector3d();
+			
+			k1 = lastFrameAcceleration;
+			k2 = lastFrameAcceleration;
+			k3 = lastFrameAcceleration;
+			k4 = lastFrameAcceleration;
+			
+			//The acceleration is constant in this interval so we can write directly
+			velocity.addScaledVector(lastFrameAcceleration, duration);
+			rotation.addScaledVector(angularAcceleration, duration);
+			
+			velocity.Multiply(Math.pow(linearDamping, duration));
+			rotation.Multiply(Math.pow(angularDamping, duration));
+			
+			// Position is different: dx/dt = ;
+			k1 = new Vector3d(lastFrameVelocity);
+			
+			
+			k2 = new Vector3d(lastFrameVelocity);
+			k2.addScaledVector(k1, duration/2.0d);
+			
+			k3 = new Vector3d(lastFrameVelocity);
+			k3.addScaledVector(k2, duration/2.0d);
+			
+			k4 = new Vector3d(lastFrameVelocity);
+			k4.addScaledVector(k3, duration);
+			
+			Vector3d k = new Vector3d(k1);
+			k.Add(k2);
+			k.Add(k3);
+			k.Add(k4);
+			k.Multiply(1.0d/6.0d);
+			
+			position.addScaledVector(k, duration);
+			orientation.AddScaledVector(rotation, duration);
+			
+			velocity.Multiply(Math.pow(linearDamping, duration));
+			rotation.Multiply(Math.pow(angularDamping, duration));
+			
+			
+			
+		}
 		CalculateDerivedData();
 		
 		/*
