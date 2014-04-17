@@ -675,18 +675,27 @@ public class Body {
 			Vector3d angularAcceleration = new Vector3d(inverseInertiaTensorWorld.Transform(torqueAccum));
 			//Runge-Kutta numerical integration
 			Vector3d k1, k2, k3, k4;
-			k1 = new Vector3d();
-			k2 = new Vector3d();
-			k3 = new Vector3d();
-			k4 = new Vector3d();
 			
-			k1 = lastFrameAcceleration;
-			k2 = lastFrameAcceleration;
-			k3 = lastFrameAcceleration;
-			k4 = lastFrameAcceleration;
+			k1 = new Vector3d(lastFrameAcceleration);
+			
+			
+			k2 = new Vector3d(lastFrameAcceleration);
+			k2.addScaledVector(k1, duration/2.0d);
+			
+			k3 = new Vector3d(lastFrameAcceleration);
+			k3.addScaledVector(k2, duration/2.0d);
+			
+			k4 = new Vector3d(lastFrameAcceleration);
+			k4.addScaledVector(k3, duration);
+			
+			Vector3d k = new Vector3d(k1);
+			k.addScaledVector(k2, 2);
+			k.addScaledVector(k3, 2);
+			k.Add(k4);
+			k.Multiply(1.0d/6.0d);
 			
 			//The acceleration is constant in this interval so we can write directly
-			velocity.addScaledVector(lastFrameAcceleration, duration);
+			velocity.addScaledVector(k, duration);
 			rotation.addScaledVector(angularAcceleration, duration);
 			
 			velocity.Multiply(Math.pow(linearDamping, duration));
@@ -705,9 +714,9 @@ public class Body {
 			k4 = new Vector3d(lastFrameVelocity);
 			k4.addScaledVector(k3, duration);
 			
-			Vector3d k = new Vector3d(k1);
-			k.Add(k2);
-			k.Add(k3);
+			k = new Vector3d(k1);
+			k.addScaledVector(k2, 2);
+			k.addScaledVector(k3, 2);
 			k.Add(k4);
 			k.Multiply(1.0d/6.0d);
 			
@@ -908,6 +917,89 @@ public class Body {
 	public Vector3d GetDirectionInLocalSpace(Vector3d direction) {
 		
 		return transformMatrix.TransformInverseDirection(direction);
+	}
+
+	public void RungeKuttaIntegration(double duration, Function function) {
+		
+		double halfStep = duration/2;
+		
+		if (!isAwake) return;
+		
+		lastFrameAcceleration = new Vector3d(acceleration);
+		
+		Vector3d angularAcceleration = new Vector3d(inverseInertiaTensorWorld.Transform(torqueAccum));
+		
+		//lastFrameAcceleration.addScaledVector(forceAccum, inverseMass);
+		
+		Vector3d lastFrameVelocity = new Vector3d(getVelocity());
+		
+		function.input = getPosition();
+		Vector3d force = new Vector3d(function.solve());
+		lastFrameAcceleration.addScaledVector(force, inverseMass);
+		
+		Vector3d k1 = lastFrameAcceleration.NewVectorMultiply(duration);
+		
+		
+		function.input = getPosition();
+		function.input.addScaledVector(k1, 0.5);
+		force = new Vector3d(function.solve());
+		lastFrameAcceleration = new Vector3d(acceleration);
+		lastFrameAcceleration.addScaledVector(force, inverseMass);
+		
+		Vector3d k2 = lastFrameAcceleration.NewVectorMultiply(duration);
+		
+		
+		
+		function.input = getPosition();
+		function.input.addScaledVector(k2, 0.5);
+		force = new Vector3d(function.solve());
+		lastFrameAcceleration = new Vector3d(acceleration);
+		lastFrameAcceleration.addScaledVector(force, inverseMass);
+		
+		Vector3d k3 = lastFrameAcceleration.NewVectorMultiply(duration);
+		
+		
+		
+		function.input = getPosition();
+		function.input.Add(k3);
+		force = new Vector3d(function.solve());
+		lastFrameAcceleration = new Vector3d(acceleration);
+		lastFrameAcceleration.addScaledVector(force, inverseMass);
+		
+		Vector3d k4 = lastFrameAcceleration.NewVectorMultiply(duration);
+		
+		Vector3d v = new Vector3d(k1);
+		v.addScaledVector(k2, 2);
+		v.addScaledVector(k3, 2);
+		v.Add(k4);
+		v.Multiply(1.0d/6.0d);
+		
+		v.Add(getVelocity());
+		setVelocity(v);
+		
+		rotation.addScaledVector(angularAcceleration, duration);
+	
+		velocity.Multiply(Math.pow(linearDamping, duration));
+		rotation.Multiply(Math.pow(angularDamping, duration));
+		
+		k1 = v.NewVectorMultiply(duration);
+		k2 = new Vector3d(k1);
+		k3 = new Vector3d(k1);
+		k4 = new Vector3d(k1);
+		
+		Vector3d newPos = new Vector3d(k1);
+		newPos.addScaledVector(k2, 2);
+		newPos.addScaledVector(k3, 2);
+		newPos.Add(k4);
+		newPos.Multiply(1.0d/6.0d);
+		newPos.Add(getPosition());
+		
+		setPosition(newPos);
+		orientation.AddScaledVector(rotation, duration);
+		
+		velocity.Multiply(Math.pow(linearDamping, duration));
+		rotation.Multiply(Math.pow(angularDamping, duration));
+		
 	}
 	
 	

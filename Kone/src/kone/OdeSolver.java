@@ -5,10 +5,10 @@ public class OdeSolver {
 	protected int dim;
 	protected double step;
 	protected Function function;
-	protected Object[] userData;
+	protected double[] userData;
 	protected double fValue;
 	
-	public OdeSolver(int dim, double step, Function function, Object[] userData)
+	public OdeSolver(int dim, double step, Function function, double[] userData)
 	{
 		this.dim = dim;
 		this.step = step;
@@ -33,12 +33,12 @@ public class OdeSolver {
 		return step;
 	}
 	
-	public void setUserData(Object[] userData)
+	public void setUserData(double[] userData)
 	{
 		this.userData = userData;
 	}
 	
-	public Object[] getUserData()
+	public double[] getUserData()
 	{
 		return userData;
 	}

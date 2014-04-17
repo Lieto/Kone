@@ -1,18 +1,22 @@
 package kone;
 
+import kone.core.Vector3d;
+
 public class Function {
 	
-	double t;
-	double[] x;
-	Object[] data;
-	Object[] output;
+	protected Vector3d input;
+	protected Vector3d output;
 	
 	public Function()
 	{
-		t = 0.0;
-		x = null;
-		data = null;
-		output = null;
+		input = new Vector3d();
+		output = new Vector3d();
+	}
+	
+	public Vector3d solve()
+	{
+		return output;
+		
 	}
 
 }
