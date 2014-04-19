@@ -132,6 +132,15 @@ public class Vector3d {
 		z = -z;
 		
 	}
+	
+	public boolean equals(Vector3d other)
+	{
+		boolean ret = false;
+		
+		if (this.x == other.x && this.y == other.y && this.z == other.z) ret = true;
+		
+		return ret;
+	}
 
 	
 
