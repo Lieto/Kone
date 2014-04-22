@@ -34,33 +34,35 @@ public class IntervalManager {
 			
 			Endpoint endPoint = new Endpoint();
 			endPoint.type = Endpoint.Type.BEGIN;
-			endPoint.value = new Vector3d(intervals.get(i).end[0].value);
+			endPoint.value = intervals.get(i).end[0].value;
 			endPoint.index = i;
 			
 			endPoints.add(2*i, endPoint);
 			
 			endPoint = new Endpoint();
 			endPoint.type = Endpoint.Type.END;
-			endPoint.value = new Vector3d(intervals.get(i).end[1].value);
+			endPoint.value = intervals.get(i).end[1].value;
 			endPoint.index = i;
 			
 			endPoints.add(2*i + 1, endPoint);
 		}
 		
+		/*
 		for (int i = 0; i < endPoints.size(); i++)
 		{
 			System.out.print(endPoints.get(i).toString() + ",");
 			System.out.println();
 		}
-		
+		*/
 		Collections.sort(endPoints);
 		
+		/*
 		for (int i = 0; i < endPoints.size(); i++)
 		{
 			System.out.print(endPoints.get(i).toString() + ",");
 			System.out.println();
 		}
-		
+		*/
 		lookUp = new ArrayList<Integer>();
 		
 		for (int j = 0; j < endPoints.size(); j++)
@@ -76,12 +78,13 @@ public class IntervalManager {
 			
 		}
 		
+		/*
 		for (int i = 0; i < endPoints.size(); i++)
 		{
 			System.out.print(lookUp.get(i).toString() + ",");
 			System.out.println();
 		}
-		
+		*/
 		Set<Integer> active = new LinkedHashSet<Integer>();
 		
 		overLaps = new LinkedHashSet<Pair>();

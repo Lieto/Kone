@@ -8,7 +8,7 @@ public class Endpoint implements Comparable<Endpoint> {
 	};
 	
 	public Type type;
-	public Vector3d value;
+	public double value;
 	
 	// Index of interval containing this endpoint
 	public int index;
@@ -16,7 +16,7 @@ public class Endpoint implements Comparable<Endpoint> {
 	public Endpoint()
 	{
 		type = Type.BEGIN;
-		value = new Vector3d();
+		value = 0.0d;
 		
 		index = 0;
 	}
@@ -24,15 +24,15 @@ public class Endpoint implements Comparable<Endpoint> {
 	public Endpoint(Endpoint other)
 	{
 		this.type = other.type;
-		value = new Vector3d(other.value);
+		value = other.value;
 		this.index = other.index;
 	}
 	
 	
 	public int compareTo(Endpoint other) {
 		
-		double length = value.SquareMagnitude();
-		double otherLength = other.value.SquareMagnitude();
+		double length = Math.abs(value);
+		double otherLength = Math.abs(other.value);
 		
 		double distance = length - otherLength;
 		
@@ -59,7 +59,7 @@ public class Endpoint implements Comparable<Endpoint> {
 	public String toString()
 	{
 		StringBuffer buffer = new StringBuffer("");
-		buffer.append(Double.toString(value.x));
+		buffer.append(Double.toString(value));
 		
 		return buffer.toString();
 	}

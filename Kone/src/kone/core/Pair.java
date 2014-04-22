@@ -6,6 +6,8 @@ public class Pair {
 	
 	public Pair(int i0, int i1)
 	{
+		super();
+		
 		if (i0 < i1)
 		{
 			this.i0 = i0;
@@ -26,8 +28,35 @@ public class Pair {
 		buffer.append(",");
 		buffer.append(Integer.toString(i1));
 		buffer.append("}");
+		
 		return buffer.toString();
 		
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + i0;
+		result = prime * result + i1;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pair other = (Pair) obj;
+		if (i0 != other.i0)
+			return false;
+		if (i1 != other.i1)
+			return false;
+		return true;
+	}
+
 
 }

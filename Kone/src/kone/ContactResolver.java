@@ -1,7 +1,10 @@
 package kone;
 
+import java.util.List;
 import java.util.Vector;
 
+import kone.core.Matrix3d;
+import kone.core.Matrixd;
 import kone.core.Vector3d;
 
 public class ContactResolver {
@@ -219,6 +222,120 @@ public class ContactResolver {
 				(positionIterations > 0) &&
 				(positionEpsilon >= 0.0d) &&
 				(velocityEpsilon >= 0.0d);
+	}
+	
+	public void DoCollisionResponse(double t, double dt,
+			List<Body> bodies, Vector<Contact> contacts)
+	{
+		Matrixd A = new Matrixd(contacts.size(), contacts.size());
+		Vector<Double> preRelVel = new Vector<Double>();
+		Vector<Double> postRelVel = new Vector<Double>();
+		double impulseMag;
+		Vector3d restingB, relAcc, restingMag;
+		
+		ComputeLCPMatrix(contacts, A);
+		ComputePreImpulseVelocity(contacts, preRelVel);
+		//Minimize(A, preRelVel, postRelVel, impulseMag);
+	}
+
+	private void Minimize(Matrixd a, Vector<Double> preRelVel,
+			Vector3d postRelVel, Vector3d impulseMag) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void ComputePreImpulseVelocity(Vector<Contact> contacts,
+			Vector<Double> preRelVel) {
+		
+		for (int i = 0; i < contacts.size(); ++i)
+		{
+			Contact ci = contacts.get(i);
+			Body A = ci.body[0];
+			Body B = ci.body[1];
+			
+			Vector3d rAi = new Vector3d(ci.contactPoint);
+			rAi.Substract(A.position);
+			
+
+			Vector3d rBi = new Vector3d(ci.contactPoint);
+			rBi.Substract(B.position);
+			
+			Vector3d velA = new Vector3d(A.velocity);
+			velA.Add(A.rotation.CrossProduct(rAi));
+			
+
+			Vector3d velB = new Vector3d(B.velocity);
+			velB.Add(B.rotation.CrossProduct(rBi));
+			
+			Vector3d tmp = new Vector3d(velA);
+			tmp.Substract(velB);
+			
+			preRelVel.add(ci.contactNormal.ScalarProduct(tmp));
+		}
+		
+		
+	}
+
+	private void ComputeLCPMatrix(Vector<Contact> contacts, Matrixd A) {
+		
+		for (int i = 0; i < contacts.size(); ++i)
+		{
+			Contact ci = contacts.get(i);
+			
+			Vector3d tmp = new Vector3d(ci.contactPoint);
+			tmp.Substract(ci.body[0].position);
+			Vector3d rANi = tmp.CrossProduct(ci.contactNormal);
+			
+			tmp = new Vector3d(ci.contactPoint);
+			tmp.Substract(ci.body[1].position);
+			Vector3d rBNi = tmp.CrossProduct(ci.contactNormal);
+			
+			for (int j = 0; j < contacts.size(); ++j)
+			{
+				Contact cj = contacts.get(j);
+				
+				tmp = new Vector3d(cj.contactPoint);
+				tmp.Substract(cj.body[0].position);
+				Vector3d rANj = tmp.CrossProduct(cj.contactNormal);
+				
+				tmp = new Vector3d(cj.contactPoint);
+				tmp.Substract(cj.body[1].position);
+				Vector3d rBNj = tmp.CrossProduct(cj.contactNormal);
+				
+				double a = 0.0d;
+				
+				if (ci.body[0] == cj.body[0])
+				{
+					a += ci.body[0].inverseMass*(ci.contactNormal.ScalarProduct(cj.contactNormal));
+					a += rANi.ScalarProduct(ci.body[0].inverseInertiaTensor.Transform(rANj));
+				}
+				else if (ci.body[0] == cj.body[1])
+				{
+					a -= ci.body[0].inverseMass*(ci.contactNormal.ScalarProduct(cj.contactNormal));
+					a -= rANi.ScalarProduct(ci.body[0].inverseInertiaTensor.Transform(rANj));
+					
+				}
+				
+				if (ci.body[1] == cj.body[0])
+				{
+					a -= ci.body[1].inverseMass*(ci.contactNormal.ScalarProduct(cj.contactNormal));
+					a -= rBNi.ScalarProduct(ci.body[1].inverseInertiaTensor.Transform(rBNj));
+					
+				}
+				else if (ci.body[1] == cj.body[1])
+				{
+					a += ci.body[1].inverseMass*(ci.contactNormal.ScalarProduct(cj.contactNormal));
+					a += rBNi.ScalarProduct(ci.body[1].inverseInertiaTensor.Transform(rBNj));
+					
+				}
+				
+				A.entry[i][j] = a;
+				
+			}
+			
+		}
+		
+		
 	}
 
 }

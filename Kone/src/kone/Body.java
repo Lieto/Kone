@@ -919,7 +919,7 @@ public class Body {
 		return transformMatrix.TransformInverseDirection(direction);
 	}
 
-	public void RungeKuttaIntegration(double duration, Function function) {
+	public void RungeKuttaIntegration(double duration, Function forceFunction) {
 		
 		double halfStep = duration/2;
 		
@@ -933,16 +933,16 @@ public class Body {
 		
 		Vector3d lastFrameVelocity = new Vector3d(getVelocity());
 		
-		function.input = getPosition();
-		Vector3d force = new Vector3d(function.solve());
+		forceFunction.input = getPosition();
+		Vector3d force = new Vector3d(forceFunction.solve());
 		lastFrameAcceleration.addScaledVector(force, inverseMass);
 		
 		Vector3d k1 = lastFrameAcceleration.NewVectorMultiply(duration);
 		
 		
-		function.input = getPosition();
-		function.input.addScaledVector(k1, 0.5);
-		force = new Vector3d(function.solve());
+		forceFunction.input = getPosition();
+		forceFunction.input.addScaledVector(k1, 0.5);
+		force = new Vector3d(forceFunction.solve());
 		lastFrameAcceleration = new Vector3d(acceleration);
 		lastFrameAcceleration.addScaledVector(force, inverseMass);
 		
@@ -950,9 +950,9 @@ public class Body {
 		
 		
 		
-		function.input = getPosition();
-		function.input.addScaledVector(k2, 0.5);
-		force = new Vector3d(function.solve());
+		forceFunction.input = getPosition();
+		forceFunction.input.addScaledVector(k2, 0.5);
+		force = new Vector3d(forceFunction.solve());
 		lastFrameAcceleration = new Vector3d(acceleration);
 		lastFrameAcceleration.addScaledVector(force, inverseMass);
 		
@@ -960,9 +960,9 @@ public class Body {
 		
 		
 		
-		function.input = getPosition();
-		function.input.Add(k3);
-		force = new Vector3d(function.solve());
+		forceFunction.input = getPosition();
+		forceFunction.input.Add(k3);
+		force = new Vector3d(forceFunction.solve());
 		lastFrameAcceleration = new Vector3d(acceleration);
 		lastFrameAcceleration.addScaledVector(force, inverseMass);
 		
@@ -1002,6 +1002,20 @@ public class Body {
 		
 	}
 	
+	public void Update(double duration)
+	{
+		double halfduration = 0.5*duration;
+		double sixthduration = duration / 6.0d;
+		
+		Vector3d newPosition, newVelocity, newRotation;
+		Quaternion newOrientation;
+		
+		Matrix3d newRotationMatrix;
+		
+		//A1 = G(t, S0), B1 = S0 + (dt /3 ) * A)
+		
+		
+	}
 	
 	
 	

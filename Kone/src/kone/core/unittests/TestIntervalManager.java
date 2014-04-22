@@ -27,42 +27,42 @@ public class TestIntervalManager {
 		Endpoint endpoint11 = new Endpoint();
 		endpoint11.index = 1;
 		endpoint11.type = Endpoint.Type.BEGIN;
-		endpoint11.value = new Vector3d(1, 0, 0);
+		endpoint11.value = 1;
 		
 		Endpoint endpoint12 = new Endpoint();
 		endpoint12.index = 1;
 		endpoint12.type = Endpoint.Type.BEGIN;
-		endpoint12.value = new Vector3d(4, 0, 0);
+		endpoint12.value = 4;
 		
 		Endpoint endpoint21 = new Endpoint();
 		endpoint21.index = 2;
 		endpoint21.type = Endpoint.Type.BEGIN;
-		endpoint21.value = new Vector3d(2, 0, 0);
+		endpoint21.value = 2;
 		
 		Endpoint endpoint22 = new Endpoint();
 		endpoint22.index = 2;
 		endpoint22.type = Endpoint.Type.BEGIN;
-		endpoint22.value = new Vector3d(8, 0, 0);
+		endpoint22.value = 8;
 		
 		Endpoint endpoint31 = new Endpoint();
 		endpoint31.index = 3;
 		endpoint31.type = Endpoint.Type.BEGIN;
-		endpoint31.value = new Vector3d(0, 0, 0);
+		endpoint31.value = 0;
 		
 		Endpoint endpoint32 = new Endpoint();
 		endpoint32.index = 3;
 		endpoint32.type = Endpoint.Type.BEGIN;
-		endpoint32.value = new Vector3d(3, 0, 0);
+		endpoint32.value = 3;
 		
 		Endpoint endpoint41 = new Endpoint();
 		endpoint41.index = 4;
 		endpoint41.type = Endpoint.Type.BEGIN;
-		endpoint41.value = new Vector3d(6, 0, 0);
+		endpoint41.value = 6;
 		
 		Endpoint endpoint42 = new Endpoint();
 		endpoint42.index = 4;
 		endpoint42.type = Endpoint.Type.BEGIN;
-		endpoint42.value = new Vector3d(10, 0, 0);
+		endpoint42.value = 10;
 	
 		
 		// Define intervals
@@ -114,7 +114,7 @@ public class TestIntervalManager {
 			Pair expectedPair = (Pair) exArray[i];
 			Pair actualPair = (Pair) acArray[i];
 			
-			System.out.println(actualPair.toString());
+			//System.out.println(actualPair.toString());
 			
 			assertEquals(expectedPair.i0, actualPair.i0);
 			assertEquals(expectedPair.i1, actualPair.i1);
@@ -124,22 +124,22 @@ public class TestIntervalManager {
 		endpoint11 = new Endpoint();
 		endpoint11.index = 1;
 		endpoint11.type = Endpoint.Type.BEGIN;
-		endpoint11.value = new Vector3d(2, 0, 0);
+		endpoint11.value = 2;
 		
 		endpoint12 = new Endpoint();
 		endpoint12.index = 1;
 		endpoint12.type = Endpoint.Type.BEGIN;
-		endpoint12.value = new Vector3d(5, 0, 0);
+		endpoint12.value = 5;
 		
 		endpoint41 = new Endpoint();
 		endpoint41.index = 4;
 		endpoint41.type = Endpoint.Type.BEGIN;
-		endpoint41.value = new Vector3d(5, 0, 0);
+		endpoint41.value = 5;
 		
 		endpoint42 = new Endpoint();
 		endpoint42.index = 4;
 		endpoint42.type = Endpoint.Type.BEGIN;
-		endpoint42.value = new Vector3d(9, 0, 0);
+		endpoint42.value = 9;
 		
 		interval1 = new Interval();
 		interval1.end[0] = endpoint11;
@@ -180,7 +180,7 @@ public class TestIntervalManager {
 			Pair expectedPair = (Pair) exArray[i];
 			Pair actualPair = (Pair) acArray[i];
 			
-			System.out.println(actualPair.toString());
+			//System.out.println(actualPair.toString());
 			
 			assertEquals(expectedPair.i0, actualPair.i0);
 			assertEquals(expectedPair.i1, actualPair.i1);
