@@ -1,9 +1,9 @@
 package kone;
 
-import kone.Function;
+import kone.Vector3dFunction;
 import kone.core.Vector3d;
 
-public class GravityFunction extends Function {
+public class GravityFunction extends Vector3dFunction {
 	
 	public double mass;
 	

@@ -5,6 +5,11 @@ public class Complex {
 	public double real;
 	public double imag;
 	
+	public Complex()
+	{
+		real = 0.0;
+		imag = 0.0;
+	}
 	
 	public Complex(double x, double y)
 	{
@@ -12,10 +17,38 @@ public class Complex {
 		imag = y;
 	}
 	
+	public Complex(Complex other)
+	{
+		real = other.real;
+		imag = other.imag;
+		
+	}
+	
 	public Complex(Polar polar)
 	{
 		real = polar.radius*Math.cos(polar.angle);
 		imag = Math.sin(polar.angle);
+	}
+	
+	public Polar Polar()
+	{
+		double radius = Math.sqrt(real*real + imag*imag);
+		double phase = Math.atan(imag/real);
+		
+		return new Polar(radius, phase);
+		
+	}
+	
+	public boolean equals(Complex other)
+	{
+		if ((real == other.real) && (imag == other.imag))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	public Complex Multiply(Complex other)

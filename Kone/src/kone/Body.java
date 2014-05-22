@@ -919,7 +919,7 @@ public class Body {
 		return transformMatrix.TransformInverseDirection(direction);
 	}
 
-	public void RungeKuttaIntegration(double duration, Function forceFunction) {
+	public void RungeKuttaIntegration(double duration, Vector3dFunction forceFunction) {
 		
 		double halfStep = duration/2;
 		

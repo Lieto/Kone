@@ -79,4 +79,17 @@ public class Random {
 		return q;
 	}
 
+	public static Vectord Vectord(Vectord low, Vectord upper) {
+		
+		Vectord result = new Vectord(low.dimension);
+		
+		for (int i = 0; i < low.dimension; i++)
+		{
+			result.entry[i] = Double(low.entry[i], upper.entry[i]);
+		}
+		
+		return result;
+		
+	}
+
 }

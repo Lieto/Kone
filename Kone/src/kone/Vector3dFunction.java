@@ -2,12 +2,13 @@ package kone;
 
 import kone.core.Vector3d;
 
-public class Function {
+
+public class Vector3dFunction {
 	
 	protected Vector3d input;
 	protected Vector3d output;
 	
-	public Function()
+	public Vector3dFunction()
 	{
 		input = new Vector3d();
 		output = new Vector3d();

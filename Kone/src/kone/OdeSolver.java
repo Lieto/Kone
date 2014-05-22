@@ -4,11 +4,11 @@ public class OdeSolver {
 	
 	protected int dim;
 	protected double step;
-	protected Function function;
+	protected DoubleFunction function;
 	protected double[] userData;
 	protected double fValue;
 	
-	public OdeSolver(int dim, double step, Function function, double[] userData)
+	public OdeSolver(int dim, double step, DoubleFunction function, double[] userData)
 	{
 		this.dim = dim;
 		this.step = step;
